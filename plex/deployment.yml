@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: plex
+  name: plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+      - image: plexinc/pms-docker:1.19.3.2852-219a9974e
+        name: plex-media-server
+        env:
+        - name: TZ
+          value: "America/Los_Angeles"
+        - name: PLEX_CLAIM
+          valueFrom:
+            secretKeyRef:
+              name: plex-secret
+              key: claim-token
+        readinessProbe:
+          httpGet:
+            path: /identity
+            port: 32400
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /identity
+            port: 32400
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+        volumeMounts:
+          - name: plex-volume
+            subPath: config
+            mountPath: /config
+          - name: plex-volume
+            subPath: data
+            mountPath: /data
+          - name: plex-volume
+            subPath: transcode
+            mountPath: /transcode
+      volumes:
+        - name: plex-volume
+          persistentVolumeClaim:
+            claimName: plex-server-claim

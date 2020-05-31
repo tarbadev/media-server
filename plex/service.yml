@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: plex-service
+  name: plex-service
+spec:
+  ports:
+  - name: pms
+    port: 32400
+    protocol: TCP
+  selector:
+    app: plex
+  type: NodePort
