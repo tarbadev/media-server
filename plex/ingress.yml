@@ -2,11 +2,14 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: plex-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   rules:
-  - http:
+  - host: "plex.tarbahome.me"
+    http:
       paths:
-      - path: /
-        backend:
-          serviceName: plex-service
-          servicePort: pms
+        - path: /
+          backend:
+            serviceName: plex-service
+            servicePort: pms

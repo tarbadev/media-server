@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "nextcloud-ingress"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size:  "50m"
+spec:
+  tls:
+  - hosts:
+    - "nextcloud.tarbahome.me"
+    secretName: "nextcloud-prod-tls"
+  rules:
+  - host: "nextcloud.tarbahome.me"
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: "nextcloud"
+            servicePort: 8080
