@@ -2,8 +2,8 @@
 
 set -e
 
-microk8s kubectl create -f plex/persistent-volume.yml
-microk8s kubectl create -f plex/persistent-volume-claim.yml
-microk8s kubectl create -f plex/deployment.yml
-microk8s kubectl create -f plex/service.yml
-microk8s kubectl create -f plex/ingress.yml
+kubectl apply -f plex/persistent-volume.yml
+kubectl apply -f plex/persistent-volume-claim.yml
+kubectl apply -f plex/deployment.yml
+kubectl apply -f plex/service.yml
+kubectl apply -f plex/ingress.yml

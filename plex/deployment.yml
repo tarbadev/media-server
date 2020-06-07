@@ -15,8 +15,10 @@ spec:
         app: plex
     spec:
       containers:
-      - image: plexinc/pms-docker:1.19.3.2852-219a9974e
+      - image: linuxserver/plex:1.19.4.2902-69560ce1e-ls102
         name: plex-media-server
+        ports:
+        - containerPort: 32400
         env:
         - name: TZ
           value: "America/Los_Angeles"
@@ -41,12 +43,6 @@ spec:
           - name: plex-volume
             subPath: config
             mountPath: /config
-          - name: plex-volume
-            subPath: data
-            mountPath: /data
-          - name: plex-volume
-            subPath: transcode
-            mountPath: /transcode
       volumes:
         - name: plex-volume
           persistentVolumeClaim:
