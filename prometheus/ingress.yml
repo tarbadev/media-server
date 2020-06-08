@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus-ingress
+  namespace: monitoring
+spec:
+  rules:
+    - host: "prometheus.tarbahome.me"
+      http:
+        paths:
+          - backend:
+              serviceName: prometheus-service
+              servicePort: promui
