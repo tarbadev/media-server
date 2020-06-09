@@ -10,6 +10,18 @@ spec:
     port: 32400
     targetPort: 32400
     protocol: TCP
+  - name: dlna
+    port: 32469
+    targetPort: 32469
+    protocol: TCP
+  - name: dlna-udp
+    port: 1900
+    targetPort: 1900
+    protocol: UDP
+  - name: bonjour-discovery
+    port: 5353
+    targetPort: 5353
+    protocol: UDP
   selector:
     app: plex
   type: NodePort

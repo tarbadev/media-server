@@ -6,10 +6,10 @@ metadata:
     name: media-volume
 spec:
   capacity:
-    storage: 5Gi
+    storage: 931Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /home/tony/media
+    path: /media/external-hdd
