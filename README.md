@@ -76,6 +76,13 @@ persistence:
 ```
 Install the helm chart: `microk8s helm3 install nextcloud stable/nextcloud --values nextcloud.values.yml`
 
+### Monitoring
+- Will install Prometheus, Grafana and Kube State Metrics
+- `kubectl create namespace monitoring`
+- On the node: `mkdir -p /home/ubuntu/k8s/grafana`
+- `./monitoring/installMonitoring.sh`
+
 ## Uninstall
 - `./uninstallPlex.sh`
 - `microk8s kubectl delete secret plex-secret`
+- `./monitoring/uninstallMonitoring.sh`

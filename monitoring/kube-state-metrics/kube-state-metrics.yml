@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-state-metrics
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: kube-state-metrics
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kube-state-metrics
+    spec:
+      containers:
+        - name: kube-state-metrics
+          image: carlosedp/kube-state-metrics:v1.9.6
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+          ports:
+            - containerPort: 8080
+              name: monitoring
+            - containerPort: 8081
+              name: telemetry
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kube-state-metrics
+  namespace: monitoring
+spec:
+  selector:
+    app: kube-state-metrics
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: monitoring
+      name: monitoring
+    - port: 8081
+      targetPort: telemetry
+      name: telemetry
+      protocol: TCP
