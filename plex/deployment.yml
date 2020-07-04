@@ -52,7 +52,6 @@ spec:
             mountPath: /config
           - name: media-volume
             mountPath: /media
-            readOnly: true
       volumes:
         - name: plex-volume
           persistentVolumeClaim:

@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: file-browser-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  rules:
+  - host: file-browser.tarbahome.me
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: file-browser-service
+            servicePort: http

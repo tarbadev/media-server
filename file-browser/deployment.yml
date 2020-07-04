@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: file-browser
+  name: file-browser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-browser
+  template:
+    metadata:
+      labels:
+        app: file-browser
+    spec:
+      containers:
+      - image: tarbadev/surfer:v5.8.0
+        name: file-browser-server
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        env:
+        - name: LOCAL_AUTH_FILE
+          value: /config/users.json
+        volumeMounts:
+          - name: media-volume
+            mountPath: /files
+          - name: config-volume
+            mountPath: /config
+            readOnly: true
+      volumes:
+        - name: media-volume
+          persistentVolumeClaim:
+            claimName: media-claim
+        - name: config-volume
+          secret:
+            secretName: file-browser-secret
