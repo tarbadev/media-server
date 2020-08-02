@@ -10,12 +10,32 @@ alias kubectl='microk8s kubectl'
 alias helm='microk8s helm3'
 ```
 
-### Setup helm
-- `helm repo add stable https://kubernetes-charts.storage.googleapis.com`
-
-### Use kubectl from another machine
+### Use kubectl remotely
 - Retrieve the config from microk8s: `microk8s config`
 - Store it on the local machine under `~/.kube/config`
+
+### Setup HDDs with Raid 1
+- Identify the drives  
+`sudo blkid`
+- Create a RAID-1 drive  
+`sudo mdadm --create --verbose /dev/md/vol1 --level=1 --raid-devices=2 /dev/sda1 /dev/sdb1`
+- Confirm the RAID Array  
+`sudo mdadm --detail /dev/md/vol1`
+- Save RAID Array
+```bash
+sudo -i
+mdadm --detail --scan >> /etc/mdadm/mdadm.conf
+exit
+```
+- Create File System  
+`sudo mkfs.ext4 -v -m .1 -b 4096 -E stride=32,stripe-width=64 /dev/md/vol1`
+- Identify the drives  
+`sudo blkid`
+- Add the new drive in /etc/fstab (need sudo)
+`UUID=e921ab4c-c7f7-4008-a30d-a6b588e341a2       /home/ubuntu/k8s/media  ext4    defaults        0       0`
+
+### Setup helm
+- `helm repo add stable https://kubernetes-charts.storage.googleapis.com`
 
 ### Setup Cert Manager
 - `kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v0.15.1/cert-manager.yaml`
@@ -34,34 +54,9 @@ alias helm='microk8s helm3'
 - Create a claim token by following the link [https://plex.tv/claim](https://plex.tv/claim)
 - Create secret `kubectl create secret generic plex-secret --from-literal=claim-token=<CLAIM>`
 - Run `./installPlex.sh`
-- Expose TCP ports from plex-service `kubectl create configmap --namespace=ingress nginx-ingress-tcp-microk8s-conf --from-literal=32400="default/plex-service:32400" --from-literal=32469="default/plex-service:32469"`
-- Expose UDP ports from plex-service `kubectl create configmap --namespace=ingress nginx-ingress-udp-microk8s-conf --from-literal=5353="default/plex-service:5353" --from-literal=1900="default/plex-service:1900"`
-- Edit daemonset `kubectl edit daemonsets.apps -n=ingress nginx-ingress-microk8s-controller`
-- Add ports:
-  ```
-  ports:
-  - containerPort: 80
-    hostPort: 80
-    protocol: TCP
-  - containerPort: 443
-    hostPort: 443
-    protocol: TCP
-  - containerPort: 32400
-    hostPort: 32400
-    protocol: TCP
-  - containerPort: 32469
-    hostPort: 32469
-    protocol: TCP
-  - containerPort: 1900
-    hostPort: 1900
-    protocol: UDP
-  - containerPort: 5353
-    hostPort: 5353
-    protocol: UDP
-  ```
 
 ### Setup File Browser
-- Create a secret with the required password hash using the template under `file-browser/secret.yml`
+- Modify the file under `file-browser/users.json` with the password hash (using https://bcrypt-generator.com for example)
 - Run `./installFileBrowser.sh`
 
 ### Monitoring

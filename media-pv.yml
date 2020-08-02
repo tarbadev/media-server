@@ -6,7 +6,7 @@ metadata:
     name: media-volume
 spec:
   capacity:
-    storage: 931Gi
+    storage: 1.84Ti
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
