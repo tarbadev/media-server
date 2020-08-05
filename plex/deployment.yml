@@ -5,6 +5,8 @@ metadata:
     app: plex
   name: plex
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -16,7 +18,7 @@ spec:
     spec:
       hostNetwork: true
       containers:
-      - image: linuxserver/plex:1.19.4.2935-79e214ead-ls106
+      - image: linuxserver/plex:1.19.5.3112-b23ab3896-ls111
         name: plex-media-server
         ports:
         - containerPort: 32469
