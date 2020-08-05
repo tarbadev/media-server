@@ -15,24 +15,22 @@ spec:
         app: file-browser
     spec:
       containers:
-      - image: tarbadev/surfer:v5.8.0
-        name: file-browser-server
+      - image: tarbadev/filebrowser:2.6.5
+        name: file-browser-test-server
+        command: ["/filebrowser"]
+        args: ["--noauth"]
         ports:
-        - containerPort: 3000
-          protocol: TCP
-        env:
-        - name: LOCAL_AUTH_FILE
-          value: /config/users.json
+          - containerPort: 80
+            protocol: TCP
         volumeMounts:
           - name: media-volume
-            mountPath: /files
-          - name: config-volume
+            mountPath: /srv
+          - name: file-browser-volume
             mountPath: /config
-            readOnly: true
       volumes:
         - name: media-volume
           persistentVolumeClaim:
             claimName: media-claim
-        - name: config-volume
-          secret:
-            secretName: file-browser-secret
+        - name: file-browser-volume
+          persistentVolumeClaim:
+            claimName: file-browser-claim

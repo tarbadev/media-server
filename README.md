@@ -33,6 +33,12 @@ exit
 `sudo blkid`
 - Add the new drive in /etc/fstab (need sudo)
 `UUID=e921ab4c-c7f7-4008-a30d-a6b588e341a2       /home/ubuntu/k8s/media  ext4    defaults        0       0`
+- Modify the rock-pi service to mount the disks after loading  
+`sudo vi /lib/systemd/system/rockpi-sata.service`
+- Modify the `After` command under [Unit] like below  
+`After=mdadm.service pigpiod.service`
+- Add the following `ExecStartPost` command under [Service]  
+`ExecStartPost=sh -c 'sleep 5; mount -va'`
 
 ### Setup helm
 - `helm repo add stable https://kubernetes-charts.storage.googleapis.com`
@@ -56,7 +62,6 @@ exit
 - Run `./installPlex.sh`
 
 ### Setup File Browser
-- Modify the file under `file-browser/users.json` with the password hash (using https://bcrypt-generator.com for example)
 - Run `./installFileBrowser.sh`
 
 ### Monitoring
